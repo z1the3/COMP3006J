@@ -1,10 +1,18 @@
-import './App.css';
+import React from 'react';
+import { ToastContainer } from 'react-toastify';
+import ImageUploader from './components/ImageUploader';
+import ImageList from './components/ImageList';
+import 'react-toastify/dist/ReactToastify.css';
 
-export function App() {
+const App: React.FC = () => {
   return (
-    <>
-      <h1>Parcel React App</h1>
-      <p>Edit <code>src/App.tsx</code> to get started!</p>
-    </>
+    <div className="App">
+      <h1>Image Hosting Service</h1>
+      <ImageUploader onUpload={() => console.log('Image uploaded successfully!')} />
+      <ImageList />
+      <ToastContainer />
+    </div>
   );
-}
+};
+
+export default App;
