@@ -65,10 +65,21 @@ async def batch_fetch(type: str):
     else:
         raise HTTPException(status_code=400, detail="Unsupported type.")
 
+    if not all_images:
+        return {
+            "code": 200,
+            "data": {
+                "success": [],
+                "failed": []
+            },
+            "message": "No images available for batch fetch."
+        }
+
     sample_size = min(10, len(all_images))
     sample = random.sample(all_images, sample_size)
     success = []
     failed = []
+
     for img in sample:
         if type == "self":
             path = self_storage.get_image_file(img["id"])
@@ -83,6 +94,7 @@ async def batch_fetch(type: str):
                 success.append(img)
             else:
                 failed.append(img["id"])
+
     return {
         "code": 200,
         "data": {
@@ -95,8 +107,14 @@ async def batch_fetch(type: str):
 
 # 获取所有图片列表
 @router.get("/images")
-async def list_all_images():
-    images = self_storage.list_images() + oss_storage.list_images()
+async def list_all_images(type: str):
+    if type == "self":
+        images = self_storage.list_images()
+    elif type == "oss":
+        images = oss_storage.list_images()
+    else:
+        raise HTTPException(status_code=400, detail="Unsupported type.")
+
     return {
         "code": 200,
         "data": {
