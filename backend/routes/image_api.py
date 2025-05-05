@@ -55,8 +55,9 @@ async def delete_image(image_id: str):
     }
 
 
+
 # 批量拉取图片（性能测试）
-@router.post("/batch-fetch/{type}")
+@router.get("/batch-fetch/{type}")
 async def batch_fetch(type: str):
     if type == "self":
         all_images = self_storage.list_images()
@@ -65,10 +66,23 @@ async def batch_fetch(type: str):
     else:
         raise HTTPException(status_code=400, detail="Unsupported type.")
 
+    if not all_images:
+        return {
+            "code": 200,
+            "data": {
+                "success": [],
+                "failed": []
+            },
+            "message": "No images available for batch fetch."
+        }
+
     sample_size = min(10, len(all_images))
+    #此行代码可决定随机fetch量，即min中的第一个参数
+
     sample = random.sample(all_images, sample_size)
     success = []
     failed = []
+
     for img in sample:
         if type == "self":
             path = self_storage.get_image_file(img["id"])
@@ -83,6 +97,7 @@ async def batch_fetch(type: str):
                 success.append(img)
             else:
                 failed.append(img["id"])
+
     return {
         "code": 200,
         "data": {
