@@ -5,12 +5,12 @@ import { toast } from 'react-toastify';
 const ImageList: React.FC = () => {
     const [images, setImages] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
-    const [fetchType, setFetchType] = useState<string>('self');
+    const [randomFetchType, setRandomFetchType] = useState<string>('self');
 
     const loadImages = async () => {
         try {
             const response = await fetchImages();
-            setImages(response.data.data.success); // 假设成功的数据在此处
+            setImages(response.data?.data?.list);
         } catch (error) {
             toast.error('Failed to fetch images!');
         }
@@ -26,7 +26,7 @@ const ImageList: React.FC = () => {
         }
     };
 
-    const handleFetchImage = async (id: string) => {
+    const handleFetchImage = async (id: string, fetchType: string) => {
         setLoading(true);
         const startTime = Date.now(); // 记录开始时间
         try {
@@ -34,7 +34,8 @@ const ImageList: React.FC = () => {
             const endTime = Date.now(); // 记录结束时间
             const timeTaken = endTime - startTime; // 计算耗时
 
-            const imageUrl = fetchType === 'self' ? URL.createObjectURL(response.data) : response.redirect;
+            // const imageUrl = fetchType === 'self' ? URL.createObjectURL(response.data) : response.redirect;
+            const imageUrl = URL.createObjectURL(response.data);
 
             // Create an image element to show the fetched image
             const imageElement = document.createElement('img');
@@ -57,7 +58,7 @@ const ImageList: React.FC = () => {
     const handleRandomFetch = async () => {
         const startTime = Date.now();
         try {
-            const response = await fetch(`/api/batch-fetch/${fetchType}`, { method: 'POST' });
+            const response = await fetch(`/api/batch-fetch/${randomFetchType}`, { method: 'POST' });
             const data = await response.json();
             const endTime = Date.now();
             const timeTaken = endTime - startTime; // 计算耗时
@@ -79,7 +80,7 @@ const ImageList: React.FC = () => {
         <div>
             <h2>Image List</h2>
             <div>
-                <select value={fetchType} onChange={(e) => setFetchType(e.target.value)}>
+                <select value={randomFetchType} onChange={(e) => setRandomFetchType(e.target.value)}>
                     <option value="self">Self</option>
                     <option value="oss">OSS</option>
                 </select>
@@ -97,7 +98,7 @@ const ImageList: React.FC = () => {
                             <strong>来源：</strong> {image.type} {/* 显示类型 */}
                         </div>
                         <div>
-                            <button onClick={() => handleFetchImage(image.id)} disabled={loading}>
+                            <button onClick={() => handleFetchImage(image.id, image.type)} disabled={loading}>
                                 获取图片
                             </button>
                         </div>

@@ -2,20 +2,6 @@ import axios from "axios";
 
 const API_BASE_URL = "http://localhost:8000/api"; // 替换为你的 API 服务器地址
 
-// // Demo 数据模拟
-// const demoImages = [
-//   {
-//     id: "abc123",
-//     url: "http://localhost:8000/api/image/abc123",
-//     type: "self",
-//   },
-//   {
-//     id: "oss456",
-//     url: "https://your-bucket.oss-cn-region.aliyuncs.com/oss456.jpg",
-//     type: "oss",
-//   },
-// ];
-
 // 上传图片
 export const uploadImage = async (file: File, type: string = "self") => {
   const formData = new FormData();
