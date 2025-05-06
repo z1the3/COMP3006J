@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { fetchImages, deleteImage, getImage, randomFetchImages } from '../services/api';
 import { toast } from 'react-toastify';
+import styles from './ImageList.module.css';
 
 const ImageList: React.FC = () => {
     const [images, setImages] = useState<any[]>([]);
@@ -76,40 +77,53 @@ const ImageList: React.FC = () => {
     }, []);
 
     return (
-        <div>
-            <h2>Image List</h2>
-            <div>
-                <select value={randomFetchType} onChange={(e) => setRandomFetchType(e.target.value)}>
+        <div className={styles.listContainer}>
+            <h2 className={styles.listTitle}>Image Gallery</h2>
+            <div className={styles.controls}>
+                <select 
+                    value={randomFetchType} 
+                    onChange={(e) => setRandomFetchType(e.target.value)}
+                    className={styles.fetchSelect}
+                >
                     <option value="self">Self</option>
-                    <option value="oss">OSS</option>
+                    <option value="oss">Oss</option>
                 </select>
-                <button onClick={() => handleRandomFetch(randomFetchType)} disabled={loading}>
-                    随机拉取图片（用于性能测试）
+                <button 
+                    onClick={() => handleRandomFetch(randomFetchType)} 
+                    disabled={loading}
+                    className={styles.fetchButton}
+                >
+                    {loading ? 'Loading...' : 'Fetch Random Images (Performance Test)'}
                 </button>
             </div>
-            <ul>
+            <ul className={styles.imageList}>
                 {images.map((image) => (
-                    <li key={image.id} style={{ marginBottom: '20px' }}>
-                        <div>
-                            <strong>图片 ID:</strong> {image.id}
+                    <li key={image.id} className={styles.imageItem}>
+                        <div className={styles.imageMeta}>
+                            <div className={styles.imageId}>Image ID: {image.id}</div>
+                            <div className={styles.imageType}>Storage: {image.type}</div>
                         </div>
                         <div>
-                            <strong>来源：</strong> {image.type} {/* 显示类型 */}
-                        </div>
-                        <div>
-                            <button onClick={() => handleFetchImage(image.id, image.type)} disabled={loading}>
-                                获取图片
+                            <button 
+                                onClick={() => handleFetchImage(image.id, image.type)} 
+                                disabled={loading}
+                                className={styles.actionButton}
+                            >
+                                {loading ? 'Loading...' : 'Fetch Image'}
+                            </button>
+                            <button 
+                                onClick={() => handleDelete(image.id)} 
+                                className={`${styles.actionButton} ${styles.deleteButton}`}
+                            >
+                                Delete
                             </button>
                         </div>
-                        <div id={`image-display-${image.id}`}></div> {/* 显示图片的地方 */}
-                        <button onClick={() => handleDelete(image.id)} style={{ marginTop: '10px' }}>
-                            删除
-                        </button>
+                        <div id={`image-display-${image.id}`} className={styles.imageDisplay}></div>
                     </li>
                 ))}
             </ul>
         </div>
     );
 };
-
+       
 export default ImageList;

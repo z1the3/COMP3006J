@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { uploadImage } from '../services/api';
 import { toast } from 'react-toastify';
+import styles from './ImageUploader.module.css'; // Assuming you have a CSS module for styling
 
 const ImageUploader: React.FC<{ onUpload: () => void }> = ({ onUpload }) => {
     const [file, setFile] = useState<File | null>(null);
@@ -25,13 +26,36 @@ const ImageUploader: React.FC<{ onUpload: () => void }> = ({ onUpload }) => {
     };
 
     return (
-        <div>
-            <input type="file" accept="image/*" onChange={handleFileChange} />
-            <select value={storageType} onChange={(e) => setStorageType(e.target.value)}>
-                <option value="self">Self</option>
-                <option value="oss">OSS</option>
-            </select>
-            <button onClick={handleUpload}>Upload Image</button>
+        <div className={styles.uploadContainer}>
+            <h2 className={styles.uploadTitle}>Upload Image</h2>
+            <div className={styles.uploadControls}>
+                <div className={styles.fileInputWrapper}>
+                    <label className={styles.fileInputLabel}>
+                    {file ? file.name : "Choose file"}
+                    <input 
+                        type="file" 
+                        accept="image/*" 
+                        onChange={handleFileChange}
+                        className={styles.fileInput}
+                    />
+                    </label>
+                </div>
+                {file && <div className={styles.fileNameDisplay}>Selected: {file.name}</div>}
+                <select 
+                    value={storageType} 
+                    onChange={(e) => setStorageType(e.target.value)}
+                    className={styles.storageSelect}
+                >
+                    <option value="self">Self</option>
+                    <option value="oss">Oss</option>
+                </select>
+                <button 
+                    onClick={handleUpload}
+                    className={styles.uploadButton}
+                >
+                    Upload Image
+                </button>
+            </div>
         </div>
     );
 };
