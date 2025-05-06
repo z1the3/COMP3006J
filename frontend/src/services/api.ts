@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:8000/api"; // 替换为你的 API 服务器地址
+// const API_BASE_URL = "http://localhost:8000/api"; // 替换为你的 API 服务器地址
+const API_BASE_URL = "http://120.26.131.156:8000/api"; // 替换为你的 API 服务器地址
 
 // 上传图片
 export const uploadImage = async (file: File, type: string = "self") => {

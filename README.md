@@ -16,8 +16,14 @@
 
 ### 安装依赖
 
+- `source myenv/bin/activate`
+
 - `pip install uvicorn fastapi python-multipart oss2`
 
 ### 开发
 
 - `uvicorn main:app --reload`
+
+### 部署
+
+- `uvicorn main:app --host 0.0.0.0 --port 8000 --reload`
