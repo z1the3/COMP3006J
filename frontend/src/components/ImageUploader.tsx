@@ -29,12 +29,18 @@ const ImageUploader: React.FC<{ onUpload: () => void }> = ({ onUpload }) => {
         <div className={styles.uploadContainer}>
             <h2 className={styles.uploadTitle}>Upload Image</h2>
             <div className={styles.uploadControls}>
-                <input 
-                    type="file" 
-                    accept="image/*" 
-                    onChange={handleFileChange}
-                    className={styles.fileInput}
-                />
+                <div className={styles.fileInputWrapper}>
+                    <label className={styles.fileInputLabel}>
+                    {file ? file.name : "Choose file"}
+                    <input 
+                        type="file" 
+                        accept="image/*" 
+                        onChange={handleFileChange}
+                        className={styles.fileInput}
+                    />
+                    </label>
+                </div>
+                {file && <div className={styles.fileNameDisplay}>Selected: {file.name}</div>}
                 <select 
                     value={storageType} 
                     onChange={(e) => setStorageType(e.target.value)}
