@@ -8,6 +8,7 @@ app = FastAPI(title="图床服务 - 本地自建 API")
 origins = [
     "http://localhost:1234",  # 允许的源地址，这里需要添加您的前端地址
     # 添加更多允许的源地址如有需要 
+    "http://120.26.131.156:1234/"
 ]
 
 app.add_middleware(
