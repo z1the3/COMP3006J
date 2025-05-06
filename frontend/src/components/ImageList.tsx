@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { fetchImages, deleteImage, getImage } from '../services/api';
+import { fetchImages, deleteImage, getImage, randomFetchImages } from '../services/api';
 import { toast } from 'react-toastify';
 
 const ImageList: React.FC = () => {
@@ -55,17 +55,16 @@ const ImageList: React.FC = () => {
         }
     };
 
-    const handleRandomFetch = async () => {
+    const handleRandomFetch = async (randomFetchType: string) => {
         const startTime = Date.now();
         try {
-            const response = await fetch(`/api/batch-fetch/${randomFetchType}`, { method: 'POST' });
-            const data = await response.json();
+            const response = await randomFetchImages(randomFetchType);
+            const data = response.data;
             const endTime = Date.now();
             const timeTaken = endTime - startTime; // 计算耗时
-
             if (data.code === 200) {
-                toast.success(`Successfully fetched ${data.data.list.length} images! Time taken: ${timeTaken} ms`);
-                setImages(data.data.list); // 更新状态以显示新拉取的图片
+                toast.success(`Successfully fetched ${data.data.success.length} images! Time taken: ${timeTaken} ms`);
+                setImages(data.data.success); // 更新状态以显示新拉取的图片
             }
         } catch (error) {
             toast.error('Failed to fetch images!');
@@ -84,7 +83,7 @@ const ImageList: React.FC = () => {
                     <option value="self">Self</option>
                     <option value="oss">OSS</option>
                 </select>
-                <button onClick={handleRandomFetch} disabled={loading}>
+                <button onClick={() => handleRandomFetch(randomFetchType)} disabled={loading}>
                     随机拉取图片（用于性能测试）
                 </button>
             </div>

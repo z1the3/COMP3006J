@@ -31,3 +31,7 @@ export const deleteImage = async (id: string) => {
 export const fetchImages = async () => {
   return axios.get(`${API_BASE_URL}/images`);
 };
+
+export const randomFetchImages = async (randomFetchType: string) => {
+  return axios.get(`${API_BASE_URL}/batch-fetch/${randomFetchType}`);
+};
