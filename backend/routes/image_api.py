@@ -110,8 +110,14 @@ async def batch_fetch(type: str):
 
 # 获取所有图片列表
 @router.get("/images")
-async def list_all_images():
-    images = self_storage.list_images() + oss_storage.list_images()
+async def list_all_images(type: str):
+    if type == "self":
+        images = self_storage.list_images()
+    elif type == "oss":
+        images = oss_storage.list_images()
+    else:
+        raise HTTPException(status_code=400, detail="Unsupported type.")
+
     return {
         "code": 200,
         "data": {
